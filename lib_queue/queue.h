@@ -42,12 +42,12 @@ void Queue<T>::push(const T& val) {
 		throw std::logic_error("Queue is full");
 	}
 	_count++;
-	_data((_head + _count - 1) % size) = val;
+	_data[(_head + _count - 1) % _size] = val;
 }
 
 template<class T>
 void Queue<T>::pop() {
-	if (is_empty) {
+	if (is_empty()) {
 		throw std::logic_error("Queue is empty");
 	}
 	_count--;
@@ -61,7 +61,7 @@ T Queue<T>::head() const {
 
 
 template<class T>
-void Queue<T>::clear() noexcept {
+void Queue<T>::clear() {
 	_head = 0;
 	_count = 0;
 }
@@ -77,12 +77,6 @@ bool Queue<T>::is_full() const noexcept {
 }
 
 template<class T>
-void Queue<T>::clear() noexcept {
-	_head = 0;
-	_count = 0;
-}
-
-template<class T>
 int Queue<T>::size() const {
-	return count;
+	return _count;
 }
