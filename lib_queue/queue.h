@@ -8,7 +8,7 @@ class Queue {
 public:
     Queue(int size = 20); 
     Queue(const Queue& other); 
-    ~Queue();  // деструктор
+    ~Queue(); 
     Queue& operator=(const Queue& other); 
 
     void push(const T& val);  
