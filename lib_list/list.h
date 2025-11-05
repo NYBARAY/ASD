@@ -14,6 +14,53 @@ private:
     int _count;
 
 public:
+
+    class Iterator {
+        Node<T>* current;
+    public:
+        Iterator() : current(nullptr) {};
+        Iterator(Node<T>* pos) : current(pos) {};
+        Iterator(const Iterator& other) : current(other.current) {};
+
+        Iterator& operator=(const Iterator& other) {
+            if (this != &other) {
+                current = other.current;
+            }
+            return *this;
+        }
+
+        T& operator*() {
+            if (current == nullptr) {
+                throw std::logic_error("currernt is 0");
+            }
+            return current->value;
+        }
+        
+        bool operator==(const Iterator& other) const {
+            return current == other.current;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return current != other.current;
+        }
+
+        Iterator operator++(int) {
+            Iterator tmp(*this);
+            if (current != nullptr) {
+                current = current->next;
+            }
+            return tmp;
+        }
+
+        Iterator& operator++() {
+            if (current != nullptr) {
+                current = current->next;
+            }
+            return *this;
+        }
+    };
+
+
     List() : _head(nullptr), _tail(nullptr), _count(0) {}
 
     List(const List& other) : _head(nullptr), _tail(nullptr), _count(0) {
@@ -43,7 +90,7 @@ public:
     void push_front(const T& val) noexcept {
         Node<T>* newNode = new Node<T>(val, _head);
         _head = newNode;
-        if (_tail == nullptr) {
+        if (is_empty()) {
             _tail = _head;
         }
         _count++;
@@ -52,7 +99,7 @@ public:
    
     void push_back(const T& val) noexcept {
         Node<T>* newNode = new Node<T>(val);
-        if (_tail == nullptr) {
+        if (is_empty()) {
             _head = _tail = newNode;
         }
         else {
@@ -229,6 +276,20 @@ public:
     }
 
     
+    T front() const {
+        if (is_empty()) {
+            throw std::logic_error("List is empty");
+        }
+        return _head->value;
+    }
+
+
+    T back() const {
+        if (is_empty()) {
+            throw std::logic_error("List is empty");
+        }
+        return _tail->value;
+    }
 
     
     Node<T>* head() const {
@@ -243,43 +304,5 @@ public:
     Iterator begin() { return Iterator(_head); }
     Iterator end() { return Iterator(nullptr); }
 
-    class Iterator {
-        Node<T>* current;
-    public:
-        Iterator() : current(nullptr) {};
-        Iterator(Node<T>* pos) : current(pos) {};
-        Iterator(const Iterator& other) : current(other.current) {};
-
-        Iterator& operator=(const Iterator& other) {
-            if (this != &other) {
-                current = other.current;
-            }
-            return *this;
-        }
-
-        T& operator*() {
-            if (current == nullptr) {
-                throw std::logic_erorr("currernt = 0");
-            }
-            return current->value;
-        }
-        bool operator!=(const Iterator& other) const {
-            return current != other.current;
-        }
-
-        Iterator operator++(int) {
-            Iterator tmp(*this);
-            if (current != nullptr) {
-                current = current->next;
-            }
-            return tmp;
-        }
-
-        Iterator& operator++() {
-            if (current != nullptr) {
-                current = current->next;
-            }
-            return *this;
-        }
-    };
+    
 };
