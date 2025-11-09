@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include "DSU.h"
+#include <vector>
 
 DSU::DSU(int size) : _size(size) {
 	_parent = new int[_size];
