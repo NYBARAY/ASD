@@ -41,6 +41,10 @@ TEST(TestListLib, PushAndPop) {
 
 }
 
+
+
+
+
 TEST(TestListLib, CopyConstructor) {
 	List<int> original;
 	original.push_back(1);
@@ -178,6 +182,30 @@ TEST(TestIterator, Read) {
 
 }
 
+TEST(TestIterator, ReadMinus) {
+	List<int> list;
+	list.push_back(100);
+	list.push_back(200);
+	list.push_back(300);
+
+	List<int>::Iterator it = list.begin();
+	++it;
+	++it;
+	
+	EXPECT_EQ(*it, 300);
+	--it;
+	EXPECT_EQ(*it, 200);
+	--it;
+	EXPECT_EQ(*it, 100);
+	--it;
+
+	it = list.begin();
+	++it;
+	List<int>::Iterator old_it = it--;
+	EXPECT_EQ(*old_it, 200);
+	EXPECT_EQ(*it, 100);
+}
+
 TEST(TestIterator, Write) {
 	List<int> list;
 	list.push_back(1);
@@ -200,6 +228,34 @@ TEST(TestIterator, Write) {
 	EXPECT_EQ(*it, 20);
 }
 
+TEST(TestIterator, WriteMinus) {
+	List<int> list;
+	list.push_back(1);
+	list.push_back(2);
+	list.push_back(3);
+	List<int>::Iterator it = list.begin();
+	++it;
+	++it;
+
+	int tmp = 30;
+	while (true) {
+		*it = tmp;
+		tmp -= 10;
+
+		if (it == list.begin()) {
+			break;
+		}
+		--it;
+	}
+
+	it = list.begin();
+	EXPECT_EQ(*it, 10);
+	++it;
+	EXPECT_EQ(*it, 20);
+	++it;
+	EXPECT_EQ(*it, 30);
+}
+
 TEST(TestIterator, Empty) {
 	List<int> list;
 	EXPECT_TRUE(list.is_empty());
@@ -213,6 +269,23 @@ TEST(TestIterator, Empty) {
 
 	List<int>::Iterator it3 = list.begin();
 	++it3;
+
+	EXPECT_EQ(it3, list.end());
+}
+
+TEST(TestIterator, EmptyMinus) {
+	List<int> list;
+	EXPECT_TRUE(list.is_empty());
+	EXPECT_EQ(list.begin(), list.end());
+
+	List<int>::Iterator it1 = list.begin();
+	List<int>::Iterator it2 = it1--;
+
+	EXPECT_EQ(it1, list.end());
+	EXPECT_EQ(it2, list.end());
+
+	List<int>::Iterator it3 = list.begin();
+	--it3;
 
 	EXPECT_EQ(it3, list.end());
 }

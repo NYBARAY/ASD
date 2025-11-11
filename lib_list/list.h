@@ -6,7 +6,8 @@ private:
     struct Node {
         T value;
         Node<T>* next;
-        Node(T value_, Node<T>* next_ = nullptr) : value(value_), next(next_) {}
+        Node<T>* prev;
+        Node(T _value, Node<T>* _prev = nullptr, Node<T>* _next = nullptr) : value(_value), prev(_prev), next(_next) {}
     };
 
     Node<T>* _head;
@@ -58,6 +59,25 @@ public:
             }
             return *this;
         }
+
+        Iterator operator--(int) {
+            Iterator tmp(*this);
+            if (current != nullptr) {
+                current = current->prev;
+            }
+            return tmp;
+        }
+
+        Iterator& operator--() {
+            if (current != nullptr) {
+                current = current->prev;
+            }
+            return *this;
+        }
+
+
+
+
     };
 
 
@@ -88,9 +108,14 @@ public:
     }
 
     void push_front(const T& val) noexcept {
-        Node<T>* newNode = new Node<T>(val, _head);
+        Node<T>* newNode = new Node<T>(val, nullptr, _head); //prev = nullptr
+        if (_head != nullptr) {
+            _head->prev = newNode;
+        }
+
         _head = newNode;
-        if (is_empty()) {
+
+        if (_tail == nullptr) {
             _tail = _head;
         }
         _count++;
@@ -98,7 +123,7 @@ public:
 
    
     void push_back(const T& val) noexcept {
-        Node<T>* newNode = new Node<T>(val);
+        Node<T>* newNode = new Node<T>(val, _tail, nullptr);
         if (is_empty()) {
             _head = _tail = newNode;
         }
@@ -112,7 +137,7 @@ public:
     
     void insert(int pos, const T& val) {
         if (pos < 0 || pos > _count) {
-            throw std::out_of_range("Position out of range");
+            throw std::logic_error("Position out of range");
         }
 
         if (pos == 0) {
@@ -123,11 +148,13 @@ public:
         }
         else {
             Node<T>* current = _head;
-            for (int i = 0; i < pos - 1; i++) {
+            for (int i = 0; i < pos; i++) {
                 current = current->next;
             }
-            Node<T>* newNode = new Node<T>(val, current->next);
-            current->next = newNode;
+
+            Node<T>* newNode = new Node<T>(val, current->prev, current);
+            current->prev->next = newNode;
+            current->prev = newNode;
             _count++;
         }
     }
@@ -135,10 +162,14 @@ public:
     
     void insert(Node<T>* node, const T& val) {
         if (node == nullptr) {
-            throw std::invalid_argument("Node cannot be null");
+            throw std::logic_error("Node cannot be null");
         }
 
-        Node<T>* newNode = new Node<T>(val, node->next);
+        Node<T>* newNode = new Node<T>(val, node, node->next);
+        if (node->next != nullptr) {
+            node->next->prev = newNode;
+        }
+        
         node->next = newNode;
 
         if (node == _tail) {
@@ -154,12 +185,17 @@ public:
 
         Node<T>* temp = _head;
         _head = _head->next;
+
+        if (_head != nullptr) {
+            _head->prev = nullptr;
+        }
+        else {
+            _tail = nullptr;
+        }
         delete temp;
         _count--;
 
-        if (_head == nullptr) {
-            _tail = nullptr;
-        }
+        
     }
 
     
@@ -173,13 +209,10 @@ public:
             _head = _tail = nullptr;
         }
         else {
-            Node<T>* current = _head;
-            while (current->next != _tail) {
-                current = current->next;
-            }
-            delete _tail;
-            _tail = current;
+            Node<T>* temp = _tail;
+            _tail = _tail->prev;
             _tail->next = nullptr;
+            delete temp;
         }
         _count--;
     }
@@ -193,6 +226,11 @@ public:
         if (pos == 0) {
             pop_front();
         }
+
+        else if (pos == _count - 1) {
+            pop_back();
+        }
+
         else {
             Node<T>* current = _head;
             for (int i = 0; i < pos - 1; i++) {
@@ -255,7 +293,7 @@ public:
 
     
     bool is_empty() const {
-        return _count == 0;
+        return _head==nullptr;
     }
 
     
