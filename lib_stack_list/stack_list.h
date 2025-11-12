@@ -5,11 +5,11 @@ class StackList {
 	List<T> _list;
 
 public:
-	StackList() {};
+	StackList() {}
 
-	StackList(const StackList& other) : _list = other._list {};
+	StackList(const StackList& other) : _list(other._list) {}
 
-	~StackList();
+	~StackList() {}
 
 	StackList& operator=(const StackList& other);
 
@@ -29,7 +29,7 @@ StackList<T>& StackList<T>::operator=(const StackList& other) {
 	if (this != &other) {
 		_list = other._list;
 	}
-	retrun *this;
+	return *this;
 }
 
 
@@ -47,7 +47,7 @@ void StackList<T>::pop() {
 
 template <class T>
 T StackList<T>::top() const {
-	return _list.front();
+	return _list.back();
 }
 
 

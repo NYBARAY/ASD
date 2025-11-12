@@ -5,9 +5,9 @@ class QueueList {
 	List<T> _list;
 
 public:
-    QueueList() {};
-    QueueList(const QueueList& other) : _list = other._list {};
-    ~QueueList();
+    QueueList() {}
+    QueueList(const QueueList& other) : _list(other._list) {}
+    ~QueueList() {}
     QueueList& operator=(const QueueList& other);
 
     void push(const T& val);
@@ -25,7 +25,7 @@ QueueList<T>& QueueList<T>::operator=(const QueueList& other) {
     if (this != &other) {
         _list = other._list;
     }
-    retrun* this;
+    return* this;
 }
 
 template <class T>
@@ -54,13 +54,13 @@ bool QueueList<T>::is_empty() const noexcept {
 
 template <class T>
 bool QueueList<T>::is_full() const noexcept {
-    return _list.is_full();
+    return false;
 }
 
 
 template <class T>
 void QueueList<T>::clear() noexcept {
-    return _list.clear();
+    _list.clear();
 }
 
 

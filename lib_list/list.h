@@ -180,7 +180,7 @@ public:
 
     void pop_front() {
         if (is_empty()) {
-            throw std::runtime_error("Cannot pop from empty list");
+            throw std::logic_error("Cannot pop from empty list");
         }
 
         Node<T>* temp = _head;
@@ -201,7 +201,7 @@ public:
     
     void pop_back() {
         if (is_empty()) {
-            throw std::runtime_error("Cannot pop from empty list");
+            throw std::logic_error("Cannot pop from empty list");
         }
 
         if (_head == _tail) {
@@ -220,7 +220,7 @@ public:
     
     void erase(int pos) {
         if (pos < 0 || pos >= _count) {
-            throw std::out_of_range("Position out of range");
+            throw std::logic_error("Position out of range");
         }
 
         if (pos == 0) {
@@ -251,7 +251,7 @@ public:
     
     void erase(Node<T>* node) {
         if (node == nullptr || is_empty()) {
-            throw std::invalid_argument("Node cannot be null or list is empty");
+            throw std::logic_error("Node cannot be null or list is empty");
         }
 
         if (node == _head) {
@@ -266,7 +266,7 @@ public:
         }
 
         if (prev == nullptr) {
-            throw std::invalid_argument("Node not found in the list");
+            throw std::logic_error("Node not found in the list");
         }
 
         prev->next = node->next;
